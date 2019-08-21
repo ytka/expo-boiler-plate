@@ -5,6 +5,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
+    "build": "expo build:web",
     "eject": "expo eject"
   },
   "dependencies": {
@@ -23,9 +24,7 @@
     "redux-persist": "^5.10.0",
     "redux-saga": "^1.0.5",
     "typescript-fsa": "^3.0.0-beta-2",
-    "typescript-fsa-reducers": "^1.2.1",
-    "unstated": "^2.1.1",
-    "unstated-next": "^1.1.0"
+    "typescript-fsa-reducers": "^1.2.1"
   },
   "devDependencies": {
     "@types/react": "^16.8.23",

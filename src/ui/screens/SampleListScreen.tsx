@@ -1,26 +1,15 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Text } from "react-native"
-import { Dispatch } from "redux";
-import { connect } from "react-redux";
 import { RootState } from "../../modules";
 
-type Props = {
-    texts: string[]
+const applicationSelector = (state: RootState) => state.application;
+
+export default function screen() {
+    const speachText = useSelector(applicationSelector);
+    const dispatch = useDispatch();
+
+    return (
+        <Text>sample text</Text>
+    );
 }
-
-class Screen extends React.Component<Props> {
-    render() {
-        return (
-            <Text>sample text</Text>
-        );
-    }
-}
-
-export const connector = connect(
-    (state: RootState) => state,
-
-    (dispatch: Dispatch) => ({
-    })
-);
-
-export default connector(Screen);

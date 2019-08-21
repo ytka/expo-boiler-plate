@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from 'react';
 // import FlashMessage from "react-native-flash-message";
 import { Provider } from "react-redux";
 import { Platform } from "react-native";
@@ -41,44 +41,36 @@ if (Platform.OS === "web") {
 
 const { store, persistor } = configureStore();
 _persistor = persistor;
-//persistor.purge();
+persistor.purge();
 
-export default class App extends React.Component {
-  private didLaunch = false;
-  state = {
-    appState: AppState.currentState,
-  };
+export default function App() {
+  const [ appState, setAppState ] = useState(AppState.currentState);
 
-  componentDidMount() {
-    if (!this.didLaunch) {
-      this.didLaunch = true;
-      store.dispatch(ApplicationModule.actions.INITIALIZE());
-    }
-    AppState.addEventListener('change', this._handleAppStateChange);
-  }
-
-  componentWillUnmount() {
-    AppState.removeEventListener('change', this._handleAppStateChange);
-  }
-
-  _handleAppStateChange = nextAppState => {
-    if (nextAppState.match(/inactive|background/) && this.state.appState === 'active') {
+  const handleAppStateChange = nextAppState => {
+    if (nextAppState.match(/inactive|background/) && appState === 'active') {
       //console.log('App has come to the background!');
       //persistor.flush();
       //persistor.persist();
     }
-    this.setState({ appState: nextAppState });
+    setAppState(nextAppState);
   };
 
-  render() {
-    return (
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <Routes ref={nav => defaultNavigationService.setNavigator(nav)} />
-        </PersistGate>
-      </Provider>
-    );
-  }
+  useEffect(() => {
+    store.dispatch(ApplicationModule.actions.INITIALIZE());
+    AppState.addEventListener('change', handleAppStateChange);
+
+    return () => {
+      AppState.removeEventListener('change', handleAppStateChange);
+    };
+  }, []);
+
+  return (
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <Routes ref={nav => defaultNavigationService.setNavigator(nav)} />
+      </PersistGate>
+    </Provider>
+  );
 }
 
 /*
